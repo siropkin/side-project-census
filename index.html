@@ -1,0 +1,532 @@
+<!-- Side Project Census — build: DATA injected by sp_build.mjs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Side Project Census</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --card: #fcfcfb;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border: rgba(11,11,11,0.10);
+  --blue: #2a78d6;
+  --blue-250: #86b6ef;
+  --blue-400: #3987e5;
+  --blue-500: #256abf;
+  --blue-600: #184f95;
+  --orange: #eb6834;
+  --wash: rgba(235,104,52,0.10);
+  --focus: rgba(42,120,214,0.45);
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --card: #1a1a19;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255,255,255,0.10);
+    --blue: #3987e5;
+    --orange: #d95926;
+    --wash: rgba(217,89,38,0.12);
+    --focus: rgba(57,135,229,0.55);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d;
+  --card: #1a1a19;
+  --ink: #ffffff;
+  --ink-2: #c3c2b7;
+  --muted: #898781;
+  --grid: #2c2c2a;
+  --baseline: #383835;
+  --border: rgba(255,255,255,0.10);
+  --blue: #3987e5;
+  --orange: #d95926;
+  --wash: rgba(217,89,38,0.12);
+  --focus: rgba(57,135,229,0.55);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scrollbar-gutter: stable; }
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 0 20px 96px;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+.wrap { max-width: 1000px; margin: 0 auto; }
+h1, h2 { font-family: "Bricolage Grotesque", "Instrument Sans", sans-serif; text-wrap: balance; line-height: 1.08; }
+a { color: var(--blue); text-underline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 2px; }
+
+/* masthead */
+.mast { padding-top: 56px; }
+.eyebrow {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12.5px; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--ink-2);
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.eyebrow .dot { color: var(--orange); }
+.eyebrow .sep { color: var(--baseline); }
+h1 { font-size: clamp(38px, 6.2vw, 64px); font-weight: 800; letter-spacing: -0.015em; margin: 14px 0 18px; max-width: 18ch; }
+.dek { font-size: 18px; color: var(--ink-2); max-width: 58ch; margin-bottom: 8px; }
+.dek strong { color: var(--ink); font-weight: 600; }
+
+/* stat row */
+.stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin: 34px 0 0; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.stat { background: var(--card); padding: 18px 16px 16px; }
+.stat .label { font-size: 12.5px; color: var(--ink-2); margin-bottom: 6px; }
+.stat .value { font-size: 30px; font-weight: 600; line-height: 1.1; letter-spacing: -0.01em; }
+.stat .sub { font-size: 12px; color: var(--muted); margin-top: 6px; }
+.stat.hero .value { font-size: 40px; }
+
+/* sections */
+section { margin-top: 84px; }
+.s-head { margin-bottom: 26px; }
+.s-eyebrow {
+  font-family: "IBM Plex Mono", monospace; font-size: 12px;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange);
+  display: flex; align-items: center; gap: 8px;
+}
+.s-eyebrow::before { content: ""; width: 18px; height: 2px; background: var(--orange); }
+h2 { font-size: clamp(26px, 3.4vw, 34px); font-weight: 800; letter-spacing: -0.01em; margin: 8px 0 8px; }
+.s-dek { color: var(--ink-2); max-width: 62ch; font-size: 16.5px; }
+.s-dek b { color: var(--ink); }
+
+/* chart cards */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 22px 20px 18px; }
+.card .c-title { font-size: 15px; font-weight: 600; }
+.card .c-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+figure svg { display: block; width: 100%; height: auto; }
+figcaption { font-size: 12.5px; color: var(--muted); margin-top: 12px; }
+
+/* legend */
+.legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; color: var(--ink-2); margin: 10px 0 4px; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.swatch.line { width: 16px; height: 3px; border-radius: 2px; }
+
+/* svg text */
+.ax { font: 12px "Instrument Sans", sans-serif; fill: var(--muted); }
+.ax-val { font: 600 12px "Instrument Sans", sans-serif; fill: var(--ink-2); }
+.svg-note { font: italic 12px "Instrument Sans", sans-serif; fill: var(--ink-2); }
+
+/* tooltip */
+#tip {
+  position: fixed; pointer-events: none; z-index: 50;
+  background: var(--card); color: var(--ink);
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 11px; font-size: 13px; line-height: 1.45;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+  opacity: 0; transition: opacity 0.12s ease;
+  max-width: 260px;
+}
+#tip .t-title { font-weight: 600; }
+#tip .t-row { display: flex; justify-content: space-between; gap: 14px; font-variant-numeric: tabular-nums; }
+#tip .t-row .k { color: var(--muted); }
+
+/* two-col section layouts */
+.duo { display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px; align-items: stretch; }
+
+/* winners table */
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); font-weight: 600; text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--baseline); }
+td { padding: 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+tbody tr:last-child td { border-bottom: none; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+td.rank { color: var(--muted); font-variant-numeric: tabular-nums; width: 30px; }
+td.title a { color: var(--ink); text-decoration: none; font-weight: 500; }
+td.title a:hover { color: var(--blue); text-decoration: underline; }
+.chip {
+  display: inline-block; font-size: 11.5px; color: var(--ink-2);
+  background: var(--page); border: 1px solid var(--border);
+  border-radius: 20px; padding: 1px 9px; white-space: nowrap;
+}
+td.date { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.table-scroll { overflow-x: auto; margin: 0 -20px; padding: 0 20px; }
+
+/* verb strip */
+.verbs { display: flex; flex-wrap: wrap; gap: 10px 26px; padding: 26px 4px; border-top: 1px solid var(--grid); border-bottom: 1px solid var(--grid); }
+.verb { display: flex; align-items: baseline; gap: 8px; }
+.verb .w { font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; font-size: 26px; letter-spacing: -0.01em; }
+.verb .c { font-family: "IBM Plex Mono", monospace; font-size: 13px; color: var(--orange); font-variant-numeric: tabular-nums; }
+
+/* footer */
+footer { margin-top: 72px; border-top: 1px solid var(--grid); padding-top: 22px; font-size: 13px; color: var(--muted); max-width: 72ch; }
+footer p { margin-bottom: 8px; }
+@media (max-width: 860px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .stat.hero { grid-column: 1 / -1; }
+  .duo { grid-template-columns: 1fr; }
+  section { margin-top: 60px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #tip { transition: none; }
+}
+</style>
+</head>
+<body>
+<div id="tip" role="status"></div>
+<div class="wrap">
+
+<header class="mast">
+  <div class="eyebrow">
+    <span>r/SideProject</span><span class="sep">/</span>
+    <span id="eyebrow-range">Mar 13 → Sep 13, 2026</span><span class="sep">/</span>
+    <span class="dot">the census</span>
+  </div>
+  <h1>What a side project looks like in 2026</h1>
+  <p class="dek" id="dek"></p>
+  <div class="stats" id="stats"></div>
+</header>
+
+<section>
+  <div class="s-head">
+    <div class="s-eyebrow">What gets built</div>
+    <h2>One in three is an AI thing</h2>
+    <p class="s-dek" id="cat-dek"></p>
+  </div>
+  <figure class="card">
+    <div class="c-title">Projects by category</div>
+    <div class="c-sub">Keyword classification of every post title and description, <span id="cat-n"></span> projects</div>
+    <div id="cat-chart"></div>
+    <figcaption>Classification is keyword-based and first-match-wins; “Uncategorized” means the title and description matched none of the category keywords. Categories aren’t mutually exclusive in the wild — a post can be an AI thing and a finance thing; the first match wins.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <div class="s-head">
+    <div class="s-eyebrow">The AI wave</div>
+    <h2>It didn’t fade</h2>
+    <p class="s-dek">Share of projects whose title or description mentions <b>AI, GPT, LLM, Claude, Gemini, or chatbot</b>, month by month. The wave that everyone predicted would collapse into fatigue just… kept rising.</p>
+  </div>
+  <figure class="card">
+    <div class="c-title">AI-mention share by month</div>
+    <div class="c-sub">Percent of posts mentioning an AI term</div>
+    <div id="ai-chart"></div>
+    <figcaption id="ai-note"></figcaption>
+  </figure>
+</section>
+
+<section>
+  <div class="s-head">
+    <div class="s-eyebrow">The cadence</div>
+    <h2>~400 launches a day</h2>
+    <p class="s-dek" id="cadence-dek"></p>
+  </div>
+  <figure class="card">
+    <div class="c-title">Posts per week</div>
+    <div class="c-sub">All projects vs. AI projects, weekly buckets</div>
+    <div class="legend">
+      <span><span class="swatch line" style="background:var(--blue)"></span>All projects</span>
+      <span><span class="swatch line" style="background:var(--orange)"></span>AI projects</span>
+    </div>
+    <div id="wk-chart"></div>
+    <figcaption>Hover for weekly counts. Volume kept climbing through the summer — school’s out, the models are free, and shipping has never been easier.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <div class="s-head">
+    <div class="s-eyebrow">The stack</div>
+    <h2>Swifties and React natives</h2>
+    <p class="s-dek">The tools people volunteer in their posts. <b>AI/LLM</b> dwarfs everything, then the field compresses into the usual frontend suspects — with a strong iOS contingent that side-project discourse never talks about.</p>
+  </div>
+  <figure class="card">
+    <div class="c-title">Tech mentions</div>
+    <div class="c-sub">Percent of projects naming the tool</div>
+    <div id="tech-chart"></div>
+    <figcaption>Mentions, not usage — people write about what they’re proud of, so this skews toward what feels worth mentioning.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <div class="s-head">
+    <div class="s-eyebrow">Reality check</div>
+    <h2>The median project gets one upvote</h2>
+    <p class="s-dek" id="eng-dek"></p>
+  </div>
+  <div class="duo">
+    <figure class="card">
+      <div class="c-title">Where the upvotes land</div>
+      <div class="c-sub">Live scores of <span id="eng-n"></span> recent projects</div>
+      <div id="eng-chart"></div>
+      <figcaption>The dream is the top 1%. The experience is the left column.</figcaption>
+    </figure>
+    <div class="card" id="eng-tiles"></div>
+  </div>
+</section>
+
+<section>
+  <div class="s-head">
+    <div class="s-eyebrow">The winners</div>
+    <h2>What actually broke through</h2>
+    <p class="s-dek">The highest-scoring projects of the six months, with live scores. Note what’s missing: almost no SaaS, almost no dashboards. The crowd rewards <b>weird, physical, and delightful</b>.</p>
+  </div>
+  <figure class="card">
+    <div class="c-title">Top 10 by upvotes</div>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th class="num">#</th><th>Project</th><th>Category</th><th class="num">Score</th><th class="num">Comments</th><th>Date</th></tr></thead>
+        <tbody id="winners"></tbody>
+      </table>
+    </div>
+    <figcaption>Titles link to the original Reddit posts. Scores as of September 13, 2026.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <div class="s-head">
+    <div class="s-eyebrow">The vernacular</div>
+    <h2>“I built —”</h2>
+    <p class="s-dek">How 40,000 people introduced their work. The verb census:</p>
+  </div>
+  <div class="verbs" id="verbs"></div>
+</section>
+
+<footer>
+  <p><b>Method.</b> Every submission to r/SideProject from January 1 to September 13, 2026 (UTC), reconstructed from the Arctic Shift Reddit archive and cross-checked against live listings. Posts whose stored text reads “[removed]” or “[deleted]” are excluded — <span id="foot-removed"></span> of them — so the census counts projects people could actually have seen, including ones later taken down by their authors.</p>
+  <p><b>Caveats.</b> Categories and tech mentions are keyword classifications, not ground truth. Archive scores are frozen at crawl time, so all engagement figures come from a live sample of <span id="foot-live"></span> recent posts and from live top-listings instead. “AI share” counts explicit mentions in the post, which undercounts quiet AI use and overcounts marketing that name-drops GPT.</p>
+  <p>Built from the archive walked page-by-page, politely, as its maintainer asks. Dashboard generated September 2026.</p>
+</footer>
+
+</div>
+<script>
+const DATA = {"n":90758,"removed":139685,"range":["2026-01-01","2026-09-13"],"perDay":355,"byCat":{"AI & LLM tools":26471,"Uncategorized":21481,"Photo & video":3178,"Dev tools":4935,"Data & analytics":3496,"Education":2211,"Marketing & social":5748,"Productivity & notes":5050,"Health & fitness":2532,"Finance & fintech":4983,"Music & audio":1192,"News & reading":928,"Community & dating":932,"Job & career":869,"Games":4051,"Travel & maps":1038,"E-commerce":1098,"Hardware & IoT":565},"weekly":{"2025-12-28":234,"2025-12-29":270,"2025-12-30":268,"2025-12-31":261,"2026-01-01":295,"2026-01-02":260,"2026-01-03":286,"2026-01-04":248,"2026-01-05":256,"2026-01-06":231,"2026-01-07":238,"2026-01-08":271,"2026-01-09":296,"2026-01-10":266,"2026-01-11":272,"2026-01-12":239,"2026-01-13":246,"2026-01-14":253,"2026-01-15":251,"2026-01-16":285,"2026-01-17":284,"2026-01-18":268,"2026-01-19":235,"2026-01-20":253,"2026-01-21":241,"2026-01-22":280,"2026-01-23":255,"2026-01-24":271,"2026-01-25":256,"2026-01-26":245,"2026-01-27":234,"2026-01-28":286,"2026-01-29":292,"2026-01-30":315,"2026-01-31":308,"2026-02-01":255,"2026-02-02":261,"2026-02-03":263,"2026-02-04":338,"2026-02-05":310,"2026-02-06":368,"2026-02-07":303,"2026-02-08":303,"2026-02-09":307,"2026-02-10":256,"2026-02-11":266,"2026-02-12":350,"2026-02-13":412,"2026-02-14":339,"2026-02-15":311,"2026-02-16":302,"2026-02-17":288,"2026-02-18":323,"2026-02-19":326,"2026-02-20":339,"2026-02-21":303,"2026-02-22":336,"2026-02-23":333,"2026-02-24":324,"2026-02-25":340,"2026-02-26":332,"2026-02-27":379,"2026-02-28":366,"2026-03-01":400,"2026-03-02":359,"2026-03-03":309,"2026-03-04":337,"2026-03-05":378,"2026-03-06":381,"2026-03-07":401,"2026-03-08":408,"2026-03-09":359,"2026-03-10":332,"2026-03-11":418,"2026-03-12":456,"2026-03-13":425,"2026-03-14":426,"2026-03-15":408,"2026-03-16":410,"2026-03-17":323,"2026-03-18":383,"2026-03-19":437,"2026-03-20":431,"2026-03-21":461,"2026-03-22":397,"2026-03-23":444,"2026-03-24":364,"2026-03-25":368,"2026-03-26":487,"2026-03-27":466,"2026-03-28":369,"2026-03-29":423,"2026-03-30":455,"2026-03-31":368,"2026-04-01":362,"2026-04-02":440,"2026-04-03":414,"2026-04-04":425,"2026-04-05":439,"2026-04-06":408,"2026-04-07":376,"2026-04-08":370,"2026-04-09":395,"2026-04-10":430,"2026-04-11":424,"2026-04-12":384,"2026-04-13":366,"2026-04-14":312,"2026-04-15":344,"2026-04-16":374,"2026-04-17":399,"2026-04-18":363,"2026-04-19":349,"2026-04-20":366,"2026-04-21":351,"2026-04-22":381,"2026-04-23":415,"2026-04-24":440,"2026-04-25":380,"2026-04-26":385,"2026-04-27":404,"2026-04-28":416,"2026-04-29":369,"2026-04-30":404,"2026-05-01":428,"2026-05-02":427,"2026-05-03":445,"2026-05-04":455,"2026-05-05":400,"2026-05-06":371,"2026-05-07":437,"2026-05-08":489,"2026-05-09":470,"2026-05-10":488,"2026-05-11":455,"2026-05-12":421,"2026-05-13":368,"2026-05-14":423,"2026-05-15":460,"2026-05-16":462,"2026-05-17":381,"2026-05-18":379,"2026-05-19":384,"2026-05-20":346,"2026-05-21":407,"2026-05-22":445,"2026-05-23":368,"2026-05-24":414,"2026-05-25":340,"2026-05-26":341,"2026-05-27":358,"2026-05-28":420,"2026-05-29":418,"2026-05-30":390,"2026-05-31":396,"2026-06-01":340,"2026-06-02":332,"2026-06-03":323,"2026-06-04":398,"2026-06-05":393,"2026-06-06":426,"2026-06-07":402,"2026-06-08":372,"2026-06-09":346,"2026-06-10":343,"2026-06-11":378,"2026-06-12":390,"2026-06-13":382,"2026-06-14":394,"2026-06-15":339,"2026-06-16":301,"2026-06-17":295,"2026-06-18":391,"2026-06-19":391,"2026-06-20":411,"2026-06-21":395,"2026-06-22":347,"2026-06-23":336,"2026-06-24":319,"2026-06-25":391,"2026-06-26":367,"2026-06-27":356,"2026-06-28":327,"2026-06-29":335,"2026-06-30":290,"2026-07-01":332,"2026-07-02":335,"2026-07-03":413,"2026-07-04":371,"2026-07-05":377,"2026-07-06":316,"2026-07-07":337,"2026-07-08":314,"2026-07-09":386,"2026-07-10":402,"2026-07-11":375,"2026-07-12":348,"2026-07-13":332,"2026-07-14":315,"2026-07-15":317,"2026-07-16":388,"2026-07-17":389,"2026-07-18":364,"2026-07-19":326,"2026-07-20":340,"2026-07-21":313,"2026-07-22":336,"2026-07-23":402,"2026-07-24":440,"2026-07-25":365,"2026-07-26":352,"2026-07-27":323,"2026-07-28":327,"2026-07-29":301,"2026-07-30":373,"2026-07-31":386,"2026-08-01":321,"2026-08-02":299,"2026-08-03":349,"2026-08-04":357,"2026-08-05":334,"2026-08-06":323,"2026-08-07":371,"2026-08-08":389,"2026-08-09":338,"2026-08-10":325,"2026-08-11":326,"2026-08-12":301,"2026-08-13":367,"2026-08-14":343,"2026-08-15":327,"2026-08-16":360,"2026-08-17":335,"2026-08-18":314,"2026-08-19":351,"2026-08-20":391,"2026-08-21":444,"2026-08-22":398,"2026-08-23":370,"2026-08-24":308,"2026-08-25":324,"2026-08-26":352,"2026-08-27":344,"2026-08-28":375,"2026-08-29":354,"2026-08-30":362,"2026-08-31":293,"2026-09-01":358,"2026-09-02":358,"2026-09-03":391,"2026-09-04":346,"2026-09-05":380,"2026-09-06":374,"2026-09-07":342,"2026-09-08":311,"2026-09-09":312},"weeklyAI":{"2025-12-28":48,"2025-12-29":76,"2025-12-30":72,"2025-12-31":60,"2026-01-01":82,"2026-01-02":51,"2026-01-03":67,"2026-01-04":52,"2026-01-05":59,"2026-01-06":54,"2026-01-07":49,"2026-01-08":69,"2026-01-09":81,"2026-01-10":57,"2026-01-11":66,"2026-01-12":63,"2026-01-13":63,"2026-01-14":63,"2026-01-15":53,"2026-01-16":65,"2026-01-17":72,"2026-01-18":60,"2026-01-19":62,"2026-01-20":53,"2026-01-21":59,"2026-01-22":82,"2026-01-23":46,"2026-01-24":71,"2026-01-25":62,"2026-01-26":67,"2026-01-27":57,"2026-01-28":86,"2026-01-29":81,"2026-01-30":77,"2026-01-31":102,"2026-02-01":76,"2026-02-02":61,"2026-02-03":60,"2026-02-04":93,"2026-02-05":91,"2026-02-06":100,"2026-02-07":85,"2026-02-08":89,"2026-02-09":77,"2026-02-10":63,"2026-02-11":79,"2026-02-12":90,"2026-02-13":117,"2026-02-14":94,"2026-02-15":91,"2026-02-16":97,"2026-02-17":78,"2026-02-18":74,"2026-02-19":106,"2026-02-20":98,"2026-02-21":89,"2026-02-22":95,"2026-02-23":96,"2026-02-24":93,"2026-02-25":101,"2026-02-26":97,"2026-02-27":107,"2026-02-28":108,"2026-03-01":129,"2026-03-02":106,"2026-03-03":89,"2026-03-04":96,"2026-03-05":123,"2026-03-06":116,"2026-03-07":140,"2026-03-08":118,"2026-03-09":122,"2026-03-10":113,"2026-03-11":118,"2026-03-12":143,"2026-03-13":123,"2026-03-14":116,"2026-03-15":114,"2026-03-16":141,"2026-03-17":97,"2026-03-18":103,"2026-03-19":151,"2026-03-20":104,"2026-03-21":152,"2026-03-22":133,"2026-03-23":158,"2026-03-24":121,"2026-03-25":110,"2026-03-26":141,"2026-03-27":129,"2026-03-28":127,"2026-03-29":127,"2026-03-30":144,"2026-03-31":120,"2026-04-01":119,"2026-04-02":126,"2026-04-03":136,"2026-04-04":138,"2026-04-05":130,"2026-04-06":111,"2026-04-07":112,"2026-04-08":105,"2026-04-09":130,"2026-04-10":122,"2026-04-11":133,"2026-04-12":115,"2026-04-13":98,"2026-04-14":91,"2026-04-15":100,"2026-04-16":130,"2026-04-17":115,"2026-04-18":107,"2026-04-19":95,"2026-04-20":113,"2026-04-21":109,"2026-04-22":108,"2026-04-23":128,"2026-04-24":138,"2026-04-25":99,"2026-04-26":113,"2026-04-27":118,"2026-04-28":124,"2026-04-29":103,"2026-04-30":108,"2026-05-01":117,"2026-05-02":105,"2026-05-03":126,"2026-05-04":133,"2026-05-05":114,"2026-05-06":110,"2026-05-07":122,"2026-05-08":170,"2026-05-09":121,"2026-05-10":134,"2026-05-11":115,"2026-05-12":100,"2026-05-13":100,"2026-05-14":135,"2026-05-15":146,"2026-05-16":140,"2026-05-17":97,"2026-05-18":119,"2026-05-19":126,"2026-05-20":88,"2026-05-21":124,"2026-05-22":125,"2026-05-23":111,"2026-05-24":111,"2026-05-25":100,"2026-05-26":111,"2026-05-27":91,"2026-05-28":144,"2026-05-29":114,"2026-05-30":125,"2026-05-31":106,"2026-06-01":95,"2026-06-02":80,"2026-06-03":83,"2026-06-04":103,"2026-06-05":101,"2026-06-06":115,"2026-06-07":114,"2026-06-08":92,"2026-06-09":102,"2026-06-10":101,"2026-06-11":97,"2026-06-12":122,"2026-06-13":91,"2026-06-14":105,"2026-06-15":85,"2026-06-16":78,"2026-06-17":87,"2026-06-18":114,"2026-06-19":125,"2026-06-20":113,"2026-06-21":102,"2026-06-22":90,"2026-06-23":75,"2026-06-24":103,"2026-06-25":110,"2026-06-26":97,"2026-06-27":112,"2026-06-28":98,"2026-06-29":88,"2026-06-30":70,"2026-07-01":95,"2026-07-02":86,"2026-07-03":124,"2026-07-04":114,"2026-07-05":106,"2026-07-06":100,"2026-07-07":107,"2026-07-08":99,"2026-07-09":125,"2026-07-10":125,"2026-07-11":122,"2026-07-12":107,"2026-07-13":104,"2026-07-14":90,"2026-07-15":100,"2026-07-16":107,"2026-07-17":119,"2026-07-18":109,"2026-07-19":92,"2026-07-20":112,"2026-07-21":88,"2026-07-22":91,"2026-07-23":97,"2026-07-24":112,"2026-07-25":94,"2026-07-26":99,"2026-07-27":82,"2026-07-28":73,"2026-07-29":77,"2026-07-30":104,"2026-07-31":115,"2026-08-01":91,"2026-08-02":68,"2026-08-03":102,"2026-08-04":93,"2026-08-05":68,"2026-08-06":76,"2026-08-07":101,"2026-08-08":111,"2026-08-09":79,"2026-08-10":76,"2026-08-11":77,"2026-08-12":83,"2026-08-13":95,"2026-08-14":83,"2026-08-15":64,"2026-08-16":90,"2026-08-17":82,"2026-08-18":70,"2026-08-19":82,"2026-08-20":84,"2026-08-21":98,"2026-08-22":86,"2026-08-23":68,"2026-08-24":65,"2026-08-25":75,"2026-08-26":82,"2026-08-27":79,"2026-08-28":84,"2026-08-29":81,"2026-08-30":102,"2026-08-31":68,"2026-09-01":83,"2026-09-02":103,"2026-09-03":94,"2026-09-04":76,"2026-09-05":101,"2026-09-06":99,"2026-09-07":74,"2026-09-08":68,"2026-09-09":71},"monthAI":{"2026-01":{"total":8048,"ai":1941},"2026-02":{"total":8717,"ai":2438},"2026-03":{"total":12185,"ai":3719},"2026-04":{"total":11707,"ai":3539},"2026-05":{"total":12755,"ai":3644},"2026-06":{"total":11126,"ai":3069},"2026-07":{"total":10916,"ai":3174},"2026-08":{"total":10748,"ai":2597},"2026-09":{"total":4556,"ai":1104}},"tech":{"AI / LLM":24536,"Swift / iOS":1899,"React":1457,"Python":1301,"Next.js":658,"Supabase":478,"Node.js":471,"Rust":413,"TypeScript":358,"Figma":291,"No-code":288,"Tailwind":284,"Flutter":261,"React Native":261,"AWS":204,"Firebase":182,"Go":113,"Vue":74,"Svelte":53},"medianScore":1,"p90":3,"p99":46,"maxScore":1182,"bins":[{"label":"0–1 upvotes","n":708,"pct":71.1},{"label":"2–9","n":248,"pct":24.9},{"label":"10–49","n":31,"pct":3.1},{"label":"50+","n":9,"pct":0.9}],"avgComments":4.5,"liveSample":996,"aiCount":25225,"monetCount":9713,"freeCount":17506,"top":[{"id":"1rluzt2","t":"Training a custom neural network to erase the cage from fight footage – still rough, but promising","s":3990,"nc":252,"a":"Capable-Waltz-4892","ct":1772747658,"f":"","cat":"Uncategorized"},{"id":"1rs969i","t":"I built a wallpaper that shifts perspective when you move your head  looking for feedback","s":3668,"nc":386,"a":"Apart-Medium6539","ct":1773363592,"f":"","cat":"Uncategorized"},{"id":"1s9ywir","t":"Automated pigeon defense system","s":3392,"nc":289,"a":"muxamilian","ct":1775080915,"f":"","cat":"Uncategorized"},{"id":"1wbu40o","t":"I built an iPhone app that turns your walks into a fog-of-war map","s":2288,"nc":235,"a":"Apart-Ad-8909","ct":1788979023,"f":"","cat":"Uncategorized"},{"id":"1u1uxff","t":"I made a dumb browser game where you ride stock charts like motocross tracks","s":2271,"nc":325,"a":"Key-Significance4952","ct":1781075519,"f":"","cat":"Uncategorized"},{"id":"1v66kqo","t":"ScreenWall - Turn old phones into synced widgets for your space.","s":2019,"nc":169,"a":"loyoan","ct":1784981020,"f":"","cat":"Uncategorized"},{"id":"1s9kov9","t":"I built an alarm clock that won’t stop ringing until you go to the toilet to turn it off","s":1831,"nc":372,"a":"Goharyiii","ct":1775050320,"f":"","cat":"Uncategorized"},{"id":"1sb02fr","t":"Introducing Zperiod — A beautifully interactive chemistry app.","s":1789,"nc":274,"a":"Zhilips","ct":1775180008,"f":"","cat":"Uncategorized"},{"id":"1veanaw","t":"I made a website that turns hand movements into electronic music","s":1732,"nc":278,"a":"thetruerobovs","ct":1785756127,"f":"","cat":"Uncategorized"},{"id":"1v9uyq0","t":"I built a speed/distance tracker for my hamster wheel, which automatically records the data and uploads it to our hamster's own Strava account","s":1685,"nc":132,"a":"Nogniks","ct":1785328588,"f":"","cat":"Uncategorized"}],"verbs":{"made":4945,"built":35924,"launched":1509,"shipped":850,"created":1003,"released":164,"developed":76,"designed":88,"wrote":105},"zeroScore":708};
+const $ = s => document.querySelector(s);
+const fmt = n => n.toLocaleString('en-US');
+const pct = (a, b) => (100 * a / b).toFixed(1);
+
+// ---------- masthead ----------
+const d = DATA;
+$('#eyebrow-range').textContent = fmtDate(d.range[0]) + ' → ' + fmtDate(d.range[1]);
+function fmtDate(iso) { const M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; const [y, m, day] = iso.split('-'); return M[+m - 1] + ' ' + (+day) + ', ' + y; }
+function daysBetween([a, b]) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
+$('#dek').innerHTML = `Since New Year’s Day, the internet’s workshop: <strong>${fmt(d.n)} projects</strong> announced to r/SideProject — dissected, classified, and counted. The headline: <strong>${pct(d.aiCount, d.n)}% now wave an AI flag</strong>, while the median project still gets exactly one upvote.`;
+
+$('#stats').innerHTML = [
+  `<div class="stat hero"><div class="label">Projects announced</div><div class="value">${fmt(d.n)}</div><div class="sub">${d.perDay.toLocaleString()} per day, every day, for ${daysBetween(d.range)} days</div></div>`,
+  `<div class="stat"><div class="label">AI-flag share</div><div class="value">${pct(d.aiCount, d.n)}%</div><div class="sub">mention AI, GPT, LLM, Claude, Gemini or chatbot</div></div>`,
+  `<div class="stat"><div class="label">Talk about money</div><div class="value">${pct(d.monetCount, d.n)}%</div><div class="sub">name pricing, revenue, customers or Stripe</div></div>`,
+  `<div class="stat"><div class="label">Median upvotes</div><div class="value">${d.medianScore}</div><div class="sub">live sample of ${fmt(d.liveSample)} recent posts</div></div>`,
+  `<div class="stat"><div class="label">Avg. comments</div><div class="value">${d.avgComments}</div><div class="sub">most projects launch into silence</div></div>`,
+].join('');
+
+$('#cat-n').textContent = fmt(d.n);
+$('#foot-removed').textContent = fmt(d.removed);
+$('#foot-live').textContent = fmt(d.liveSample);
+$('#cat-dek').innerHTML = `Classify all ${fmt(d.n)} projects by what they claim to be and the shape is unambiguous: <b>${Object.keys(d.byCat)[0]} lead the league</b>, and the long tail is every category a lone builder can ship alone — finance trackers, photo tools, dev utilities. Games and hardware are scarce: solo builders gravitate to what compiles from a bedroom.`;
+$('#cadence-dek').innerHTML = `Week in, week out, roughly <b>${(d.perDay * 7).toLocaleString()} strangers announced something they made</b> — and the AI share of that stream rose from ${pct(Object.values(d.monthAI)[0].ai, Object.values(d.monthAI)[0].total)}% to ${pct(Object.values(d.monthAI).at(-1).ai, Object.values(d.monthAI).at(-1).total)}%.`;
+$('#eng-dek').innerHTML = `Live-scored, the distribution is brutal and honest: <b>${d.bins[0].pct}% of projects launch to 0–1 upvotes</b>. You are not doing it wrong. That is simply the base rate. The top ${d.bins[3].pct}% is what a lottery win looks like in this subreddit.`;
+$('#eng-n').textContent = fmt(d.liveSample);
+$('#ai-note').textContent = `From ${pct(Object.values(d.monthAI)[0].ai, Object.values(d.monthAI)[0].total)}% in March to ${pct(Object.values(d.monthAI).at(-1).ai, Object.values(d.monthAI).at(-1).total)}% in September.`;
+
+// ---------- tooltip ----------
+const tip = $('#tip');
+function showTip(html, x, y) {
+  tip.innerHTML = html;
+  tip.style.opacity = 1;
+  const r = tip.getBoundingClientRect();
+  let left = x + 14, top = y + 14;
+  if (left + r.width > innerWidth - 12) left = x - r.width - 14;
+  if (top + r.height > innerHeight - 12) top = y - r.height - 14;
+  tip.style.left = left + 'px'; tip.style.top = top + 'px';
+}
+function hideTip() { tip.style.opacity = 0; }
+addEventListener('scroll', hideTip, { passive: true });
+
+// ---------- horizontal bars (categories / tech) ----------
+function hBars(el, entries, opts = {}) {
+  const total = opts.total || entries.reduce((s, e) => s + e[1], 0);
+  const W = 720, rowH = 30, topPad = 8, leftW = 172, rightW = 82, H = topPad + rowH * entries.length;
+  const barMax = W - leftW - rightW;
+  const maxV = Math.max(...entries.map(e => e[1]));
+  let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${opts.aria || 'bar chart'}">`;
+  entries.forEach(([name, v], i) => {
+    const y = topPad + i * rowH;
+    const w = Math.max(2, (v / maxV) * barMax);
+    const h = 18;
+    const display = opts.pctOf ? pct(v, opts.pctOf) + '%' : fmt(v);
+    const estW = display.length * 7.2 + 8;
+    const fits = leftW + w + estW < W - 6;
+    svg += `<g class="row" tabindex="0" data-name="${esc(name)}" data-v="${v}" data-pct="${display}">
+      <text x="${leftW - 10}" y="${y + h / 2 + 4}" text-anchor="end" class="ax" style="fill:var(--ink-2)">${esc(name)}</text>
+      <rect x="${leftW}" y="${y + h / 2 - 9}" width="${barMax}" height="18" rx="4" style="fill:var(--grid);opacity:.35"/>
+      <rect x="${leftW}" y="${y}" width="${w}" height="${h}" rx="4" style="fill:var(${opts.color || '--blue'})"/>
+      ${fits
+        ? `<text x="${leftW + w + 8}" y="${y + h / 2 + 4}" class="ax-val">${display}</text>`
+        : `<text x="${leftW + w - 8}" y="${y + h / 2 + 4}" text-anchor="end" class="ax-val" style="fill:#fff">${display}</text>`}
+    </g>`;
+  });
+  svg += '</svg>';
+  el.innerHTML = svg;
+  el.querySelectorAll('.row').forEach(g => {
+    const t = () => showTip(`<div class="t-title">${g.dataset.name}</div><div class="t-row"><span class="k">${opts.unit || 'projects'}</span><span>${fmt(g.dataset.v)}</span></div><div class="t-row"><span class="k">share</span><span>${g.dataset.pct}</span></div>`, lastEvt.x, lastEvt.y);
+    g.addEventListener('mousemove', e => { lastEvt = e; t(); });
+    g.addEventListener('mouseleave', hideTip);
+    g.addEventListener('focus', () => showTip(`<div class="t-title">${g.dataset.name}</div><div class="t-row"><span class="k">${opts.unit || 'projects'}</span><span>${fmt(g.dataset.v)} (${g.dataset.pct})</span></div>`, g.getBoundingClientRect().left + 180, g.getBoundingClientRect().top + 20));
+    g.addEventListener('blur', hideTip);
+  });
+}
+let lastEvt = { x: 0, y: 0 };
+function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+// categories: all of them, alphabetical — no folding
+const catData = Object.entries(d.byCat).sort((a, b) => a[0].localeCompare(b[0]));
+hBars($('#cat-chart'), catData, { pctOf: d.n, aria: 'projects by category' });
+hBars($('#tech-chart'), Object.entries(d.tech).slice(0, 14), { pctOf: d.n, unit: 'mentions', aria: 'tech mentions' });
+
+// ---------- monthly AI share line ----------
+(function () {
+  const months = Object.entries(d.monthAI).map(([m, v]) => ({ m, ...v, p: 100 * v.ai / v.total }));
+  const M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const lbl = mo => M[+mo.slice(5, 7) - 1];
+  const W = 720, H = 300, padL = 44, padR = 30, padT = 24, padB = 34;
+  const x = i => padL + (i / (months.length - 1)) * (W - padL - padR);
+  const [lo, hi] = [Math.min(...months.map(m => m.p)), Math.max(...months.map(m => m.p))];
+  const min = Math.floor((lo - 4) / 5) * 5, max = Math.ceil((hi + 2) / 5) * 5;
+  const y = v => padT + (1 - (v - min) / (max - min)) * (H - padT - padB);
+  let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="AI share by month">`;
+  for (let g = min; g <= max; g += 5) {
+    svg += `<line x1="${padL}" x2="${W - padR}" y1="${y(g)}" y2="${y(g)}" style="stroke:var(--grid)" stroke-width="1"/>
+      <text x="${padL - 8}" y="${y(g) + 4}" text-anchor="end" class="ax">${g}%</text>`;
+  }
+  const pts = months.map((m, i) => `${x(i)},${y(m.p)}`).join(' ');
+  svg += `<polygon points="${padL},${H - padB} ${pts} ${x(months.length - 1)},${H - padB}" style="fill:var(--wash)"/>`;
+  svg += `<polyline points="${pts}" style="fill:none;stroke:var(--orange)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  months.forEach((m, i) => {
+    svg += `<circle cx="${x(i)}" cy="${y(m.p)}" r="4.5" style="fill:var(--orange);stroke:var(--card)" stroke-width="2"/>
+      <text x="${x(i)}" y="${y(m.p) - 12}" text-anchor="middle" class="ax-val">${m.p.toFixed(1)}%</text>
+      <text x="${x(i)}" y="${H - 12}" text-anchor="middle" class="ax">${lbl(m.m)}</text>
+      <circle class="pt" cx="${x(i)}" cy="${y(m.p)}" r="12" fill="transparent" tabindex="0" data-l="${lbl(m.m)}" data-t="${m.total}" data-a="${m.ai}" data-p="${m.p.toFixed(1)}"/>`;
+  });
+  svg += '</svg>';
+  $('#ai-chart').innerHTML = svg;
+  $('#ai-chart').querySelectorAll('.pt').forEach(c => {
+    const t = e => showTip(`<div class="t-title">${c.dataset.l} 2026</div><div class="t-row"><span class="k">AI projects</span><span>${fmt(c.dataset.a)} / ${fmt(c.dataset.t)}</span></div><div class="t-row"><span class="k">share</span><span>${c.dataset.p}%</span></div>`, e.clientX, e.clientY);
+    c.addEventListener('mousemove', t);
+    c.addEventListener('mouseleave', hideTip);
+    c.addEventListener('focus', () => { const r = c.getBoundingClientRect(); showTip(`<div class="t-title">${c.dataset.l} 2026</div><div class="t-row"><span class="k">AI projects</span><span>${fmt(c.dataset.a)} / ${fmt(c.dataset.t)} (${c.dataset.p}%)</span></div>`, r.left, r.top); });
+    c.addEventListener('blur', hideTip);
+  });
+})();
+
+// ---------- weekly two-series line with crosshair ----------
+(function () {
+  const weeks = Object.keys(d.weekly).sort();
+  const ai = weeks.map(w => d.weeklyAI[w] || 0);
+  const tot = weeks.map(w => d.weekly[w]);
+  const W = 720, H = 300, padL = 52, padR = 20, padT = 18, padB = 34;
+  const x = i => padL + (i / (weeks.length - 1)) * (W - padL - padR);
+  const maxV = Math.ceil(Math.max(...tot) / 200) * 200;
+  const y = v => padT + (1 - v / maxV) * (H - padT - padB);
+  let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="posts per week">`;
+  for (let g = 0; g <= maxV; g += 400) {
+    svg += `<line x1="${padL}" x2="${W - padR}" y1="${y(g)}" y2="${y(g)}" style="stroke:var(--grid)" stroke-width="1"/>
+      <text x="${padL - 8}" y="${y(g) + 4}" text-anchor="end" class="ax">${g >= 1000 ? (g / 1000) + 'k' : g}</text>`;
+  }
+  const mkLine = (arr, color) => {
+    const pts = arr.map((v, i) => `${x(i)},${y(v)}`).join(' ');
+    return `<polyline points="${pts}" style="fill:none;stroke:${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  };
+  svg += `<polygon points="${padL},${H - padB} ${tot.map((v, i) => `${x(i)},${y(v)}`).join(' ')} ${x(tot.length - 1)},${H - padB}" style="fill:var(--blue);opacity:.06"/>`;
+  svg += mkLine(tot, 'var(--blue)') + mkLine(ai, 'var(--orange)');
+  const step = Math.ceil(weeks.length / 9);
+  weeks.forEach((w, i) => {
+    if (i % step === 0 || i === weeks.length - 1)
+      svg += `<text x="${x(i)}" y="${H - 12}" text-anchor="middle" class="ax">${w.slice(5)}</text>`;
+  });
+  svg += `<line id="xh" x1="0" x2="0" y1="${padT}" y2="${H - padB}" style="stroke:var(--baseline)" stroke-width="1" opacity="0"/>`;
+  svg += '</svg>';
+  $('#wk-chart').innerHTML = svg;
+  const svgEl = $('#wk-chart svg');
+  const xh = svgEl.querySelector('#xh');
+  svgEl.addEventListener('mousemove', e => {
+    const r = svgEl.getBoundingClientRect();
+    const px = (e.clientX - r.left) * (W / r.width);
+    const i = Math.max(0, Math.min(weeks.length - 1, Math.round(((px - padL) / (W - padL - padR)) * (weeks.length - 1))));
+    xh.setAttribute('x1', x(i)); xh.setAttribute('x2', x(i)); xh.setAttribute('opacity', 0.6);
+    const wk = weeks[i], [yy, mm, dd] = wk.split('-');
+    showTip(`<div class="t-title">Week of ${wk}</div>
+      <div class="t-row"><span class="k">All projects</span><span>${fmt(tot[i])}</span></div>
+      <div class="t-row"><span class="k">AI projects</span><span>${fmt(ai[i])} (${pct(ai[i], tot[i])}%)</span></div>`, e.clientX, e.clientY);
+  });
+  svgEl.addEventListener('mouseleave', () => { xh.setAttribute('opacity', 0); hideTip(); });
+})();
+
+// ---------- engagement bins (ordinal ramp) ----------
+(function () {
+  const bins = d.bins;
+  const W = 720, H = 280, padL = 10, padR = 10, padT = 30, padB = 44;
+  const colW = (W - padL - padR) / bins.length;
+  const maxP = Math.max(...bins.map(b => b.pct));
+  const y = v => padT + (1 - v / (maxP * 1.12)) * (H - padT - padB);
+  const steps = ['--blue-250', '--blue-400', '--blue-500', '--blue-600'];
+  let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="upvote distribution">`;
+  svg += `<line x1="${padL}" x2="${W - padR}" y1="${y(0)}" y2="${y(0)}" style="stroke:var(--baseline)" stroke-width="1"/>`;
+  bins.forEach((b, i) => {
+    const bw = Math.min(64, colW - 26);
+    const bx = padL + colW * i + (colW - bw) / 2;
+    const by = y(b.pct);
+    svg += `<g class="bin" tabindex="0" data-l="${b.label}" data-n="${b.n}" data-p="${b.pct}">
+      <rect x="${bx}" y="${by}" width="${bw}" height="${y(0) - by}" rx="4" style="fill:var(${steps[i]})"/>
+      <text x="${bx + bw / 2}" y="${by - 10}" text-anchor="middle" class="ax-val">${b.pct}%</text>
+      <text x="${bx + bw / 2}" y="${y(0) + 22}" text-anchor="middle" class="ax">${esc(b.label)}</text>
+      <rect x="${padL + colW * i}" y="${padT}" width="${colW}" height="${H - padT - padB}" fill="transparent"/>
+    </g>`;
+  });
+  svg += '</svg>';
+  $('#eng-chart').innerHTML = svg;
+  $('#eng-chart').querySelectorAll('.bin').forEach(g => {
+    const t = e => showTip(`<div class="t-title">${g.dataset.l} upvotes</div><div class="t-row"><span class="k">projects</span><span>${fmt(g.dataset.n)} (${g.dataset.p}%)</span></div>`, e.clientX, e.clientY);
+    g.addEventListener('mousemove', t);
+    g.addEventListener('mouseleave', hideTip);
+    g.addEventListener('focus', () => { const r = g.getBoundingClientRect(); showTip(`<div class="t-title">${g.dataset.l} upvotes</div><div class="t-row"><span class="k">projects</span><span>${fmt(g.dataset.n)} (${g.dataset.p}%)</span></div>`, r.left + 80, r.top); });
+    g.addEventListener('blur', hideTip);
+  });
+})();
+
+// engagement side tiles
+$('#eng-tiles').innerHTML = [
+  ['Median score', d.medianScore, 'half the room is below this'],
+  ['90th percentile', d.p90, 'the bar for “doing well”'],
+  ['99th percentile', d.p99, 'where the algorithm takes over'],
+  ['Best of six months', fmt(d.maxScore), 'upvotes for one project'],
+].map(([l, v, s]) => `<div class="stat" style="border-bottom:1px solid var(--grid)">
+  <div class="label">${l}</div><div class="value">${v}</div><div class="sub">${s}</div></div>`).join('');
+
+// ---------- winners ----------
+$('#winners').innerHTML = d.top.slice(0, 10).map((p, i) => `<tr>
+  <td class="rank">${i + 1}</td>
+  <td class="title"><a href="https://www.reddit.com/r/SideProject/comments/${p.id}/" target="_blank" rel="noopener">${esc(p.t)}</a></td>
+  <td><span class="chip">${esc(p.cat)}</span></td>
+  <td class="num">${fmt(p.s)}</td>
+  <td class="num">${fmt(p.nc)}</td>
+  <td class="date">${new Date(p.ct * 1000).toISOString().slice(0, 10)}</td>
+</tr>`).join('');
+
+// ---------- verbs ----------
+$('#verbs').innerHTML = Object.entries(d.verbs).sort((a, b) => b[1] - a[1])
+  .map(([w, c]) => `<span class="verb"><span class="w">${w}</span><span class="c">×${fmt(c)}</span></span>`).join('');
+</script>
+</body>
+</html>
