@@ -13,8 +13,10 @@ rolling census. To refresh the data:
 2. **Analyze** — `node sp_analyze.mjs` merges `/tmp/asi*/`, filters out
    `[removed]`/`[deleted]` posts (mod spam — ~60% of raw volume), classifies
    each project by keywords, emits `/tmp/sp_analysis.json`.
-3. **Build** — `node sp_build.mjs` injects the JSON into the `DATA` placeholder
-   of the template and writes `index.html`.
+3. **Build** — `node sp_build.mjs` injects data into the `DATA` placeholder of
+   `dashboard-template.html` and writes `index.html`. Picks up
+   `/tmp/sp_analysis.json` when present, else falls back to the committed
+   `data.json` snapshot — so the page rebuilds from the repo alone.
 4. Commit & push — GitHub Pages serves `index.html` from `master` root.
 
 Gotchas learned the hard way: Reddit's own API caps any listing at ~1000 items
