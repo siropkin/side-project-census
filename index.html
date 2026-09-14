@@ -78,7 +78,13 @@ a { color: var(--blue); text-underline-offset: 2px; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 2px; }
 
 /* masthead */
-.mast { padding-top: 56px; }
+.mast { padding-top: 40px; }
+.home {
+  display: inline-block; margin-bottom: 18px;
+  font-family: "IBM Plex Mono", monospace; font-size: 13px;
+  color: var(--muted); text-decoration: none;
+}
+.home:hover { color: var(--ink); }
 .eyebrow {
   font-family: "IBM Plex Mono", monospace;
   font-size: 12.5px; letter-spacing: 0.09em; text-transform: uppercase;
@@ -189,6 +195,7 @@ footer p { margin-bottom: 8px; }
 <div class="wrap">
 
 <header class="mast">
+  <a class="home" href="https://srdkn.com" aria-label="Back to srdkn.com">← srdkn.com</a>
   <div class="eyebrow">
     <span>r/SideProject</span><span class="sep">/</span>
     <span id="eyebrow-range">Mar 13 → Sep 13, 2026</span><span class="sep">/</span>
